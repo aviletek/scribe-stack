@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<!--
+  Scribe Stack
+  Copyright (c) 2026 Jose AVILES
+  All rights reserved.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scribe Stack - Notes Organizer & Task Manager</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Scribe Stack is a powerful notes organizer and task manager with categories, due dates, progress tracking, encryption support, and offline capabilities. Organize your thoughts, track tasks, and stay productive.">
+    <meta name="keywords" content="notes, organizer, task manager, productivity, note-taking, encrypted notes, offline notes, to-do list, project management">
+    <meta name="author" content="Jose AVILES">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://scribestack.app/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://scribestack.app/">
+    <meta property="og:title" content="Scribe Stack - Notes Organizer & Task Manager">
+    <meta property="og:description" content="A powerful notes organizer with categories, due dates, progress tracking, encryption support, and offline capabilities.">
+    <meta property="og:image" content="https://scribestack.app/og-image.png">
+    <meta property="og:site_name" content="Scribe Stack">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://scribestack.app/">
+    <meta name="twitter:title" content="Scribe Stack - Notes Organizer & Task Manager">
+    <meta name="twitter:description" content="A powerful notes organizer with categories, due dates, progress tracking, encryption support, and offline capabilities.">
+    <meta name="twitter:image" content="https://scribestack.app/og-image.png">
+    
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="application-name" content="Scribe Stack">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='18' width='24' height='6' rx='1' fill='%236366f1'/><rect x='6' y='11' width='20' height='6' rx='1' fill='%23818cf8'/><rect x='8' y='4' width='16' height='6' rx='1' fill='%23a5b4fc'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=128g">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-left">
+                <button id="sidebarToggle" class="sidebar-toggle" title="Toggle Sidebar">
+                    <span class="hamburger-icon">☰</span>
+                </button>
+                <div class="project-name-container">
+                    <input type="text" id="projectName" placeholder="Enter Notebook Name..." maxlength="50">
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="privacyToggle" class="privacy-toggle" title="Privacy Mode">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <line x1="4" y1="4" x2="20" y2="20"></line>
+                    </svg>
+                </button>
+                <button id="themeToggle" class="theme-toggle" title="Toggle Dark/Light Mode">
+                    <span class="icon-light">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                    <span class="icon-dark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                </button>
+                <button id="addRequirementBtn" class="btn btn-icon" title="Add Note">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+                <button id="importBtn" class="btn btn-icon" title="Open">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
+                <button id="exportBtn" class="btn btn-icon" title="Save">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                </button>
+                <button id="printBtn" class="btn btn-icon" title="Print">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                </button>
+                <button id="newProjectBtn" class="btn btn-success">New Stack</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div id="sidebarOverlay" class="sidebar-overlay"></div>
+            <aside class="sidebar" id="sidebar">
+                <button id="closeSidebar" class="close-sidebar-btn">✕</button>
+                
+                <div class="sidebar-mobile-actions">
+                    <h3>Actions</h3>
+                    <button id="importBtnMobile" class="btn btn-secondary btn-full">Open</button>
+                    <button id="exportBtnMobile" class="btn btn-secondary btn-full">Save</button>
+                    <button id="printBtnMobile" class="btn btn-secondary btn-full">Print</button>
+                    <button id="newProjectBtnMobile" class="btn btn-success btn-full">New</button>
+                </div>
+
+                <div class="filter-section">
+                    <h3>Filters</h3>
+                    
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select id="filterCategory">
+                            <option value="">All Categories</option>
+                            <!-- Options populated dynamically -->
+                        </select>
+                        <button id="manageCategoriesBtn" class="btn btn-text btn-sm">⚙️ Manage Categories</button>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Rating</label>
+                        <select id="filterPriority">
+                            <option value="">All Ratings</option>
+                            <option value="5">★★★★★ (5 Stars)</option>
+                            <option value="4">★★★★☆ (4 Stars)</option>
+                            <option value="3">★★★☆☆ (3 Stars)</option>
+                            <option value="2">★★☆☆☆ (2 Stars)</option>
+                            <option value="1">★☆☆☆☆ (1 Star)</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select id="filterStatus">
+                            <option value="">All Statuses</option>
+                            <option value="not-started">Not Started</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="deferred">Deferred</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <button id="clearFilters" class="btn btn-text">Clear Filters</button>
+                </div>
+
+                <div class="stats-carousel">
+                    <div class="stats-tabs">
+                        <button class="stats-tab active" data-tab="overview">Overview</button>
+                        <button class="stats-tab" data-tab="status">Status</button>
+                        <button class="stats-tab" data-tab="rating">Rating</button>
+                        <button class="stats-tab" data-tab="category">Category</button>
+                    </div>
+                    
+                    <div class="stats-panels">
+                        <div class="stats-panel active" id="panel-overview">
+                            <div class="stat-item">
+                                <span class="stat-label">Total Notes</span>
+                                <span id="totalCount" class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Trackable Notes</span>
+                                <span id="totalActions" class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Average Rating</span>
+                                <span id="avgRating" class="stat-value">0 ★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-panel" id="panel-status">
+                            <div class="stat-item">
+                                <span class="stat-label">Not Started</span>
+                                <span id="statusNotStarted" class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">In Progress</span>
+                                <span id="statusInProgress" class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Completed</span>
+                                <span id="statusCompleted" class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Deferred</span>
+                                <span id="statusDeferred" class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Cancelled</span>
+                                <span id="statusCancelled" class="stat-value">0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-panel" id="panel-rating">
+                            <div class="stat-item">
+                                <span class="stat-label">★★★★★</span>
+                                <span id="rating5" class="stat-value stat-rating-5">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">★★★★☆</span>
+                                <span id="rating4" class="stat-value stat-rating-4">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">★★★☆☆</span>
+                                <span id="rating3" class="stat-value stat-rating-3">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">★★☆☆☆</span>
+                                <span id="rating2" class="stat-value stat-rating-2">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">★☆☆☆☆</span>
+                                <span id="rating1" class="stat-value stat-rating-1">0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-panel" id="panel-category">
+                            <div id="categoryStats" class="category-stats"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-actions">
+                    <button id="encryptionSettingsBtn" class="btn btn-secondary btn-full">Encryption Settings</button>
+                    <button id="helpBtn" class="btn btn-secondary btn-full">How to Use</button>
+                </div>
+            </aside>
+
+            <section class="requirements-list">
+                <div id="fileInfoDisplay" class="file-info-display">
+                    <div class="file-info-left">
+                        <span id="fileInfoName" class="file-info-name">No file opened</span>
+                        <span id="fileInfoPath" class="file-info-path"></span>
+                        <span id="fileInfoModified" class="file-info-modified"></span>
+                    </div>
+                    <span id="fileInfoEncryption" class="file-info-encryption"></span>
+                </div>
+                <div id="dueSoonBanner" class="due-soon-banner" style="display: none;">
+                    <div class="due-soon-icon">⏰</div>
+                    <div class="due-soon-content">
+                        <strong>Due Soon!</strong>
+                        <span id="dueSoonMessage"></span>
+                    </div>
+                    <button id="showDueSoonBtn" class="btn btn-sm btn-warning">Show</button>
+                    <button id="dismissDueSoonBtn" class="btn btn-sm btn-text">✕</button>
+                </div>
+                <div class="list-header">
+                    <input type="text" id="searchInput" placeholder="Search notes..." class="search-input">
+                    <div class="sort-controls">
+                        <label>Sort by:</label>
+                        <select id="sortBy">
+                            <option value="id">ID</option>
+                            <option value="rating">Rating</option>
+                            <option value="category">Category</option>
+                            <option value="date" selected>Date</option>
+                            <option value="status">Status</option>
+                            <option value="due">Due Date</option>
+                            <option value="due-soon">Due Soon</option>
+                            <option value="overdue">Overdue</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="requirementsContainer" class="requirements-container">
+                    <!-- Notes will be rendered here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add/Edit Note Modal -->
+    <div id="requirementModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Note</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="requirementForm">
+                <input type="hidden" id="reqId">
+                
+                <div class="form-row two-columns title-rating-row">
+                    <div class="form-group title-group">
+                        <label for="reqTitle">Title *</label>
+                        <input type="text" id="reqTitle" required placeholder="Enter note title">
+                    </div>
+                    <div class="form-group rating-group">
+                        <label for="reqPriority">Rating</label>
+                        <div class="star-rating-input" id="starRatingInput">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <input type="hidden" id="reqPriority" value="3">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Content *</label>
+                        <div id="quillEditor" class="quill-editor-container"></div>
+                        <input type="hidden" id="reqDescription" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reqCategory">Category</label>
+                        <select id="reqCategory">
+                            <!-- Options populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row" id="statusRow" style="display: none;">
+                    <div class="form-group">
+                        <label for="reqStatus">Action Status</label>
+                        <select id="reqStatus">
+                            <option value="not-started" selected>Not Started</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="deferred">Deferred</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row two-columns" id="actionDetailsRow" style="display: none;">
+                    <div class="form-group">
+                        <label for="reqDueDate">Due Date</label>
+                        <input type="date" id="reqDueDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="reqProgress">Progress</label>
+                        <div class="progress-input-container">
+                            <input type="range" id="reqProgressSlider" min="0" max="100" value="0" class="progress-slider">
+                            <input type="number" id="reqProgress" min="0" max="100" value="0" class="progress-number">
+                            <span class="progress-percent">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Attachments <span class="label-hint">(Max 25MB per file, 100MB total)</span></label>
+                        <div class="attachment-container">
+                            <input type="file" id="attachmentInput" multiple style="display: none;">
+                            <button type="button" id="addAttachmentBtn" class="btn btn-secondary btn-sm">📎 Add Files</button>
+                            <div id="attachmentList" class="attachment-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Linked Notes</label>
+                        <div class="linked-notes-display">
+                            <div id="linkedNotesPreview" class="linked-notes-preview">No linked notes</div>
+                            <button type="button" id="openLinkNotesBtn" class="btn btn-secondary btn-sm">Manage Links</button>
+                        </div>
+                        <input type="hidden" id="reqLinked" value="">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reqNotes">Additional Notes</label>
+                        <textarea id="reqNotes" rows="2" placeholder="Any additional notes or tags"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Done</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Note Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="viewModalTitle">Note Details</h2>
+                <button class="close-btn" id="closeViewModal">&times;</button>
+            </div>
+            <div id="viewModalContent" class="view-content">
+                <!-- Content will be populated dynamically -->
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="closeViewBtn">Close</button>
+                <button type="button" class="btn btn-secondary" id="printFromViewBtn">Print</button>
+                <button type="button" class="btn btn-primary" id="editFromViewBtn">Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Notes Modal -->
+    <div id="linkNotesModal" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h2>🔗 Link Notes</h2>
+                <button class="close-btn" id="closeLinkNotesModal">&times;</button>
+            </div>
+            <div class="view-content link-notes-content">
+                <div class="link-notes-search">
+                    <input type="text" id="linkNotesSearch" placeholder="Search notes..." class="search-input">
+                </div>
+                <div id="linkNotesList" class="link-notes-list">
+                    <!-- Notes will be populated dynamically -->
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" id="confirmLinkNotesBtn">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📖 How to Use This App</h2>
+                <button class="close-btn" id="closeHelpModal">&times;</button>
+            </div>
+            <div class="view-content help-content">
+                <div class="help-section">
+                    <h3>🚀 Getting Started</h3>
+                    <ul>
+                        <li><strong>Notebook Name:</strong> Click on the notebook name at the top to rename your notebook.</li>
+                        <li><strong>Add Notes:</strong> Click the + icon button to create a new note.</li>
+                        <li><strong>Quick Entry:</strong> Only Title and Content are required - other fields have smart defaults.</li>
+                        <li><strong>New Stack:</strong> Click "New Stack" to clear all notes and start fresh.</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>📝 Note Categories</h3>
+                    <ul>
+                        <li><strong>Default Categories:</strong> Personal, Work, Ideas, Learning, Action, Archive, and Private.</li>
+                        <li><strong>Action Category:</strong> Special category with status tracking (Not Started, In Progress, Completed, Deferred, Cancelled), progress bar, and due dates.</li>
+                        <li><strong>Archive Category:</strong> Hidden from main view - use to store completed or inactive notes. Select "Archive" filter to view.</li>
+                        <li><strong>Private Category:</strong> Only available for encrypted files. Requires password each time you access. Hidden from main view.</li>
+                        <li><strong>Custom Categories:</strong> Click "Manage Categories" in the sidebar to add your own with status tracking.</li>
+                        <li><strong>Filter Counts:</strong> Category and status filters show note counts in parentheses.</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>⭐ Rating System</h3>
+                    <ul>
+                        <li>Rate your notes from 1 to 5 stars based on importance or priority.</li>
+                        <li>Click on the stars when creating or editing a note to set the rating.</li>
+                        <li>Use the rating filter to find your most important notes quickly.</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>✍️ Rich Text Editor</h3>
+                    <ul>
+                        <li><strong>Formatting:</strong> Use bold, italic, underline, and strikethrough.</li>
+                        <li><strong>Headers:</strong> Create headings (H1, H2, H3) for organization.</li>
+                        <li><strong>Lists:</strong> Add ordered (numbered) or unordered (bullet) lists.</li>
+                        <li><strong>Colors:</strong> Change text color and background highlight.</li>
+                        <li><strong>Code:</strong> Add inline code or code blocks for technical notes.</li>
+                        <li><strong>Links:</strong> Insert clickable hyperlinks within your content.</li>
+                        <li><strong>Images:</strong> Click the image icon or paste from clipboard to embed images (auto-compressed).</li>
+                        <li><strong>Tables:</strong> Tables from external sources display correctly when pasted.</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>🔗 Linking Notes</h3>
+                    <ul>
+                        <li><strong>Link Related Notes:</strong> Select other notes to link when creating or editing.</li>
+                        <li><strong>Click to Navigate:</strong> Click on linked note IDs to view connected notes.</li>
+                        <li><strong>URL Links:</strong> Type <code>https://example.com</code> or use markdown: <code>[Link Text](url)</code></li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>📎 File Attachments</h3>
+                    <ul>
+                        <li><strong>Add Files:</strong> Click "Add Files" in the note form to attach documents, images, etc.</li>
+                        <li><strong>File Limits:</strong> Maximum 25MB per file, 100MB total per note.</li>
+                        <li><strong>Any File Type:</strong> Images, PDFs, Word docs, spreadsheets, and more.</li>
+                        <li><strong>Download:</strong> Click on attachment names to download files.</li>
+                        <li><strong>Portable:</strong> Attachments are embedded and travel with your notebook file.</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>💾 Save & Open</h3>
+                    <ul>
+                        <li><strong>Save (disk icon):</strong> Save your notes to a JSON file. First save prompts for encryption choice.</li>
+                        <li><strong>Autosave:</strong> After first save or open, changes auto-save to your file.</li>
+                        <li><strong>Open (folder icon):</strong> Load notes from a previously saved file (enables autosave).</li>
+                        <li><strong>Print (printer icon):</strong> Generate a printable PDF report of all notes.</li>
+                        <li><strong>Print Note:</strong> Click "Print" in the View modal to print a single note.</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>🔐 Password Protection (Encryption)</h3>
+                    <ul>
+                        <li><strong>Encrypted Export:</strong> When saving, choose to password-protect your backup.</li>
+                        <li><strong>AES-256 Encryption:</strong> Uses military-grade AES-GCM encryption for security.</li>
+                        <li><strong>Import Encrypted:</strong> Automatically detects encrypted files and prompts for password.</li>
+                        <li><strong>File Extension:</strong> Encrypted files are saved as <code>.encrypted.json</code></li>
+                        <li><strong>Private Category:</strong> Only available when file is encrypted - stores sensitive notes that require password to view.</li>
+                        <li><strong>Encryption Settings:</strong> Click "Encryption Settings" in the sidebar to enable/change encryption.</li>
+                        <li><strong>⚠️ Important:</strong> Remember your password - there's no recovery if forgotten!</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>🔒 Privacy Mode</h3>
+                    <ul>
+                        <li><strong>Activate:</strong> Click the eye icon (with strike-through) to instantly blur the screen.</li>
+                        <li><strong>Deactivate (Desktop):</strong> Press <code>Shift + Enter</code> to reveal content.</li>
+                        <li><strong>Deactivate (Mobile):</strong> Double-tap anywhere on the blurred overlay.</li>
+                        <li><strong>Persists:</strong> Privacy mode stays active even after page refresh.</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>📊 Statistics & Filters</h3>
+                    <ul>
+                        <li><strong>Overview Panel:</strong> See total notes, action items, and average rating.</li>
+                        <li><strong>Status Panel:</strong> Track action notes by status (Not Started, In Progress, etc.).</li>
+                        <li><strong>Rating Panel:</strong> View distribution of notes by star rating.</li>
+                        <li><strong>Category Panel:</strong> See breakdown by category.</li>
+                        <li><strong>Filters:</strong> Filter notes by category, rating, or status from the sidebar.</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>🔍 Search & Sort</h3>
+                    <ul>
+                        <li><strong>Search:</strong> Find notes by title, content, or note ID.</li>
+                        <li><strong>Sort Options:</strong> Sort by ID, Rating, Category, Date, Status, or Due Date.</li>
+                        <li><strong>Due Soon:</strong> Shows notes due within 48 hours (excludes completed/cancelled).</li>
+                        <li><strong>Overdue:</strong> Shows only notes past their due date (excludes completed/cancelled).</li>
+                        <li><strong>Due Soon Banner:</strong> A notification banner appears when items are due soon.</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>🌙 Other Features</h3>
+                    <ul>
+                        <li><strong>Dark/Light Mode:</strong> Toggle between themes using the moon/sun icon.</li>
+                        <li><strong>Auto-Save:</strong> After first save or open, changes auto-save to your file automatically.</li>
+                        <li><strong>Session Storage:</strong> Notes persist in browser storage per tab until you save to file.</li>
+                        <li><strong>Mobile Friendly:</strong> Use the hamburger menu to access sidebar on mobile devices.</li>
+                        <li><strong>Inline Editing:</strong> Click "Edit" on any note card to edit directly without a modal.</li>
+                        <li><strong>Expand Notes:</strong> Click on any note card to expand and see full details.</li>
+                        <li><strong>View Modal:</strong> Click "View" for a detailed read-only view with print option.</li>
+                        <li><strong>File Info Bar:</strong> Shows current file name, path, last modified time, and encryption status.</li>
+                    </ul>
+                </div>
+                
+                <div class="help-footer">
+                    <div class="footer-credit">
+                        Coded by Jose Aviles using Claude Opus 4.5<br>
+                        © 2026. All rights reserved.
+                    </div>
+                    <div class="footer-contact">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" id="closeHelpBtn">Got it!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Management Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Manage Categories</h2>
+                <button class="close-btn" id="closeCategoryModal">&times;</button>
+            </div>
+            <div class="view-content category-content">
+                <div class="category-add-section">
+                    <button id="addCategoryBtn" class="btn btn-primary">+ Add Category</button>
+                </div>
+                <div class="category-list" id="categoryList">
+                    <!-- Categories populated dynamically -->
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="closeCategoryBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Dialog Modal -->
+    <div id="customDialog" class="modal custom-dialog-modal">
+        <div class="modal-content custom-dialog-content">
+            <div class="modal-header">
+                <h2 id="dialogTitle">Dialog</h2>
+                <button class="close-btn" id="closeDialog">&times;</button>
+            </div>
+            <div class="custom-dialog-body">
+                <p id="dialogMessage"></p>
+                <div id="dialogInputContainer" class="dialog-input-container" style="display: none;">
+                    <input type="text" id="dialogInput" class="dialog-input" placeholder="">
+                </div>
+            </div>
+            <div class="form-actions custom-dialog-actions">
+                <button type="button" class="btn btn-secondary" id="dialogCancelBtn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="dialogOkBtn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Mode Overlay -->
+    <div id="privacyOverlay" class="privacy-overlay"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script src="app.js?v=20260125e"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT",
+            storageBucket: "YOUR_PROJECT.firebasestorage.app",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
+        };
+
+        // Initialize Firebase
+        // Analytics only starts once the placeholders above are replaced
+        // with your own Firebase project settings.
+        if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+        }
+    </script>
+</body>
+</html>

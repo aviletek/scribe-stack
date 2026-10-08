@@ -1,0 +1,8 @@
+# Robots.txt for Scribe Stack
+# https://scribe-stack.web.app
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://scribe-stack.web.app/sitemap.xml
