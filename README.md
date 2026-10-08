@@ -1,6 +1,6 @@
 # Scribe Stack
 
-A notes organizer and task manager that runs entirely in the browser.
+Free open source notes organizer and task manager that runs entirely in the browser with Encryption and privacy view mode (CTRL+SHIFT+ENTER).
 
 **Try it live:** [scribe-stack.web.app](https://scribe-stack.web.app/)
 
